@@ -417,6 +417,20 @@ if not model_exists:
         <strong>⚠️ Model not found!</strong><br>
         Train the LSTM model first by running:<br>
         <code>python src/train.py</code><br><br>
+        This will create <code>models/lstm_weights.weights.h5</code> and <code>models/scaler.pkl</code>
+    </div>
+    """, unsafe_allow_html=True)
+
+col_btn1, col_btn2 = st.columns(2)
+
+with col_btn1:
+    run_prediction = st.button('🔮 Run LSTM Prediction', type='primary',
+                               disabled=not model_exists,
+                               use_container_width=True)
+
+with col_btn2:
+    run_forecast = st.button(f'🔭 Forecast Next {forecast_days} Days',
+                             disabled=not model_exists,
                              use_container_width=True)
 
 # ── Run Prediction ───────────────────────────────────────────
