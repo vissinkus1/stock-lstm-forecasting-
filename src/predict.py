@@ -13,13 +13,24 @@ import joblib
 import yfinance as yf
 from tensorflow.keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
+from src.model import build_lstm_model
 
 # Add project root to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 
+def load_trained_model(model_path='models/lstm_weights.weights.h5', scaler_path='models/scaler.pkl'):
+    if not os.path.exists(model_path) or not os.path.exists(scaler_path):
+        raise FileNotFoundError("Model or Scaler not found. Run train.py first.")
+    
+    model = build_lstm_model()
+    model.load_weights(model_path)
+    scaler = joblib.load(scaler_path)
+    return model, scaler
+
+
 def predict_stock(ticker='RELIANCE.NS', period='1y', window_size=60,
-                  model_path='models/lstm_model.keras',
+                  model_path='models/lstm_weights.weights.h5',
                   scaler_path='models/scaler.pkl'):
     """
     Load trained model and generate predictions on recent data.
@@ -37,8 +48,7 @@ def predict_stock(ticker='RELIANCE.NS', period='1y', window_size=60,
         predicted   (np.array):         Predicted closing prices
     """
     # Load model and scaler
-    model = load_model(model_path)
-    scaler = joblib.load(scaler_path)
+    model, scaler = load_trained_model(model_path, scaler_path)
 
     # Download fresh data
     df = yf.download(ticker, period=period)
@@ -67,7 +77,7 @@ def predict_stock(ticker='RELIANCE.NS', period='1y', window_size=60,
 
 
 def forecast_future(ticker='RELIANCE.NS', days_ahead=30, window_size=60,
-                    model_path='models/lstm_model.keras',
+                    model_path='models/lstm_weights.weights.h5',
                     scaler_path='models/scaler.pkl'):
     """
     Generate future price forecasts beyond available data.

@@ -101,6 +101,7 @@ def main():
         dropout=DROPOUT,
         learning_rate=LR
     )
+    model.save_weights('models/lstm_weights.weights.h5')
 
     # -- Step 4: Define Callbacks ─────────────────────────────
     print('\n[PHASE 4] Setting up training callbacks...')
@@ -115,9 +116,9 @@ def main():
             verbose=1
         ),
         # Save best model based on val_loss
-        ModelCheckpoint(
-            'models/lstm_model.keras',
+            'models/lstm_weights.weights.h5',
             save_best_only=True,
+            save_weights_only=True,
             monitor='val_loss',
             verbose=1
         ),
@@ -170,7 +171,7 @@ def main():
 
     print('\n' + '=' * 60)
     print('  TRAINING COMPLETE!')
-    print(f'  Best model saved to: models/lstm_model.keras')
+    print(f'  Best weights saved to: models/lstm_weights.weights.h5')
     print(f'  Scaler saved to:     models/scaler.pkl')
     print(f'  Epochs trained:      {len(history.history["loss"])}')
     print(f'  Best val_loss:       {min(history.history["val_loss"]):.6f}')

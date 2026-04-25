@@ -14,14 +14,14 @@ import os
 import numpy as np
 import joblib
 import matplotlib.pyplot as plt
-from tensorflow.keras.models import load_model
-from sklearn.metrics import mean_squared_error, mean_absolute_error
+from sklearn.metrics import root_mean_squared_error, mean_absolute_error
+from src.model import build_lstm_model
 
 # Add project root to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 
-def evaluate(X_test, y_test, model_path='models/lstm_model.keras',
+def evaluate(X_test, y_test, model_path='models/lstm_weights.weights.h5',
              scaler_path='models/scaler.pkl'):
     """
     Evaluate trained LSTM model on test data.
@@ -38,8 +38,9 @@ def evaluate(X_test, y_test, model_path='models/lstm_model.keras',
         mape  (float): Mean Absolute Percentage Error
     """
     # Load model and scaler
-    print('[INFO] Loading model and scaler...')
-    model = load_model(model_path)
+    print("[INFO] Loading model and scaler...")
+    model = build_lstm_model()
+    model.load_weights(model_path)
     scaler = joblib.load(scaler_path)
 
     # Generate predictions

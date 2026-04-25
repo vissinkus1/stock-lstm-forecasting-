@@ -22,6 +22,9 @@ from datetime import date, timedelta
 # Add project root to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
+from src.data_loader import download_stock_data
+from src.feature_engineering import preprocess, create_sequences
+from src.model import build_lstm_model
 from app.utils import (
     get_stock_info,
     format_currency,
@@ -403,31 +406,17 @@ st.plotly_chart(fig_main, use_container_width=True)
 st.markdown('<div class="section-header">🧠 LSTM Model Prediction</div>',
             unsafe_allow_html=True)
 
-model_path = 'models/lstm_model.keras'
+model_path = 'models/lstm_weights.weights.h5'
 scaler_path = 'models/scaler.pkl'
 
 model_exists = os.path.exists(model_path) and os.path.exists(scaler_path)
 
 if not model_exists:
     st.markdown("""
-    <div class="info-box">
+    <div style="background-color:#ffebee; color:#c62828; padding:15px; border-radius:10px; margin-bottom:20px;">
         <strong>⚠️ Model not found!</strong><br>
         Train the LSTM model first by running:<br>
         <code>python src/train.py</code><br><br>
-        This will create <code>models/lstm_model.keras</code> and <code>models/scaler.pkl</code>
-    </div>
-    """, unsafe_allow_html=True)
-
-col_btn1, col_btn2 = st.columns(2)
-
-with col_btn1:
-    run_prediction = st.button('🔮 Run LSTM Prediction', type='primary',
-                               disabled=not model_exists,
-                               use_container_width=True)
-
-with col_btn2:
-    run_forecast = st.button(f'🔭 Forecast Next {forecast_days} Days',
-                             disabled=not model_exists,
                              use_container_width=True)
 
 # ── Run Prediction ───────────────────────────────────────────
