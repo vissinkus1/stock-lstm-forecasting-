@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: stock-lstm-forecast
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run app/streamlit_app.py --server.port $PORT --server.address 0.0.0.0 --server.headless true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.10.12"
+      - key: MPLBACKEND
+        value: Agg
