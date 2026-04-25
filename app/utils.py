@@ -11,7 +11,7 @@ import pandas as pd
 import joblib
 import yfinance as yf
 from sklearn.metrics import mean_squared_error, mean_absolute_error
-from tensorflow.keras.models import load_model
+from src.model import build_lstm_model
 
 
 def get_stock_info(ticker):
@@ -96,7 +96,8 @@ def generate_prediction(df, model_path, scaler_path, window_size=60):
     Returns:
         dates, actual_prices, predicted_prices, rmse, mae, mape
     """
-    model = load_model(model_path)
+    model = build_lstm_model()
+    model.load_weights(model_path)
     scaler = joblib.load(scaler_path)
 
     close = df[['Close']].values
@@ -136,7 +137,8 @@ def forecast_future_prices(df, model_path, scaler_path,
     Returns:
         future_prices (np.array): Array of forecasted prices
     """
-    model = load_model(model_path)
+    model = build_lstm_model()
+    model.load_weights(model_path)
     scaler = joblib.load(scaler_path)
 
     close = df[['Close']].values
