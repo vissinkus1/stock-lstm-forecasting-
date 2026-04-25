@@ -23,7 +23,7 @@ from datetime import date, timedelta
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
 from src.data_loader import download_stock_data
-from src.feature_engineering import preprocess, create_sequences
+from src.feature_engineering import preprocess
 from src.model import build_lstm_model
 from app.utils import (
     get_stock_info,

@@ -14,9 +14,7 @@ data/raw/*.csv
 data/processed/*.npy
 data/processed/*.png
 
-# Model files (large)
-models/*.h5
-models/*.keras
+
 models/*.pkl
 models/saved_model/
 models/training_log.csv
