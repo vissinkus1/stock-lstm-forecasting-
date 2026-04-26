@@ -218,11 +218,20 @@ with st.sidebar:
 # ══════════════════════════════════════════════════════════════
 @st.cache_data(ttl=3600, show_spinner=False)
 def load_data(ticker, period):
-    """Download and cache stock data."""
-    df = yf.download(ticker, period=period)
-    if isinstance(df.columns, pd.MultiIndex):
-        df.columns = df.columns.get_level_values(0)
-    return df
+    """Download and cache stock data with retry logic."""
+    import time
+    for attempt in range(3):
+        try:
+            df = yf.download(ticker, period=period, progress=False, timeout=30)
+            if isinstance(df.columns, pd.MultiIndex):
+                df.columns = df.columns.get_level_values(0)
+            if not df.empty:
+                df.dropna(inplace=True)
+                return df
+        except Exception:
+            pass
+        time.sleep(2)
+    return pd.DataFrame()
 
 
 with st.spinner(f'Fetching {ticker} data...'):
